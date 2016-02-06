@@ -1,16 +1,34 @@
 package com.rukiasoft.androidapps.evernoteclient;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.EvernoteUtil;
+import com.evernote.client.android.asyncclient.EvernoteCallback;
+import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
 import com.evernote.client.android.login.EvernoteLoginFragment;
+import com.evernote.edam.error.EDAMNotFoundException;
+import com.evernote.edam.error.EDAMSystemException;
+import com.evernote.edam.error.EDAMUserException;
+import com.evernote.edam.notestore.NoteFilter;
+import com.evernote.edam.notestore.NoteList;
+import com.evernote.edam.type.Note;
+import com.evernote.edam.type.Notebook;
+import com.evernote.thrift.TException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 
 public class NoteListActivity extends AppCompatActivity implements EvernoteLoginFragment.ResultCallback{
 
@@ -37,8 +55,7 @@ public class NoteListActivity extends AppCompatActivity implements EvernoteLogin
                 .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
                 .asSingleton();
 
-        // TODO: 6/2/16 remove this. only forces reauthorization (for testing)
-        mEvernoteSession.logOut();
+
     }
 
     @Override
@@ -67,7 +84,9 @@ public class NoteListActivity extends AppCompatActivity implements EvernoteLogin
         if(!mEvernoteSession.isLoggedIn()) {
             mEvernoteSession.authenticate(this);
         } else {
-            // TODO: 6/2/16 logged, show notes
+            testGetNotes();
+            //testAddNote();
+
         }
     }
 
@@ -75,10 +94,83 @@ public class NoteListActivity extends AppCompatActivity implements EvernoteLogin
     public void onLoginFinished(boolean successful) {
         if (successful) {
             Toast.makeText(getApplicationContext(), "yuhuuuu", Toast.LENGTH_LONG).show();
+            testGetNotes();
         } else {
             // Do not change view and show a message
             Toast.makeText(getApplicationContext(), "Could not login. Try again.", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    void testGetNotes(){
+        if (!EvernoteSession.getInstance().isLoggedIn()) {
+            return;
+        }
+
+        EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+        noteStoreClient.findNotesAsync(new NoteFilter(), 0, 1000, new EvernoteCallback<NoteList>() {
+
+            @Override
+            public void onSuccess(NoteList result) {
+                List<Note> notes = result.getNotes();
+                for (Note note : notes) {
+                    String titulo = note.getTitle();
+                    String body = note.getContent();
+                    EvernoteNoteStoreClient prueba = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+
+                    prueba.getNoteAsync(note.getGuid(), true, true, true, true, new EvernoteCallback<Note>() {
+                            @Override
+                            public void onSuccess(Note result) {
+                                String titulo1 = result.getTitle();
+                                String body1 = result.getContent();
+                                int i=0;
+                                i++;
+                            }
+
+                            @Override
+                            public void onException(Exception exception) {
+                                    int i=0;
+                                i++;
+                            }
+                        });
+
+
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                int i=0;
+                i++;
+
+            }
+
+        });
+    }
+
+    private void testAddNote(){
+        if (!EvernoteSession.getInstance().isLoggedIn()) {
+            return;
+        }
+
+        EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+
+        Note note = new Note();
+        note.setTitle("nota añadida por la app");
+        note.setContent(EvernoteUtil.NOTE_PREFIX + "a ver si publicas contenido, cojones" + EvernoteUtil.NOTE_SUFFIX);
+
+        noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
+            @Override
+            public void onSuccess(Note result) {
+                Toast.makeText(getApplicationContext(), result.getTitle() + " has been created", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("LOGTAG", "Error creating note", exception);
+            }
+        });
+
+
     }
 }
