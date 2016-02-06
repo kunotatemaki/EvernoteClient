@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Evernote Client</string>
     <string name="action_settings">Settings</string>
+    <string name="chicho_login">login icon</string>
+    <string name="login_text">Tap button to log in EverNote</string>
+    <string name="button_login">Login</string>
 </resources>
