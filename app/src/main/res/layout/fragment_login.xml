@@ -32,7 +32,7 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_medium"
         android:gravity="center_horizontal"
         android:text="@string/login_text"
         android:textStyle="bold"

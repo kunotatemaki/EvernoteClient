@@ -21,6 +21,7 @@ public class LoginFragment extends Fragment {
     @Bind(R.id.login_button)
     Button loginButton;
 
+
     public interface OnLoginListener {
         void onLoginClick();
     }
@@ -48,6 +49,8 @@ public class LoginFragment extends Fragment {
                 mCallback.onLoginClick();
             }
         });
+        
+
         return view;
     }
 
@@ -74,14 +77,23 @@ public class LoginFragment extends Fragment {
         mCallback = null;
     }
 
+    @Override
     public void onResume(){
         super.onResume();
         if(getActivity() instanceof EverNoteActivity){
             ((EverNoteActivity)getActivity()).hideBackArrow();
             ((EverNoteActivity)getActivity()).disableRefreshLayoutSwipe();
             ((EverNoteActivity)getActivity()).hideFabButton();
-            ((EverNoteActivity)getActivity()).setTitle(getResources().getString(R.string.app_name));
-
+            ((EverNoteActivity)getActivity()).setTitle(getResources().getString(R.string.app_name) + " - " +
+                    getResources().getString(R.string.login_fragment));
         }
+
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
 }

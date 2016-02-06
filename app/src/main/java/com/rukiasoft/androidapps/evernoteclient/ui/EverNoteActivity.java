@@ -1,7 +1,12 @@
 package com.rukiasoft.androidapps.evernoteclient.ui;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +64,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                 .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
                 .asSingleton();
 
+
         //check which fragment I should launch
         if(!mEverNoteSession.isLoggedIn()){
             launchLoginFragment();
@@ -67,12 +73,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_note_list, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -81,17 +82,41 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch(id){
-            case R.id.action_settings:
+            case R.id.action_log_out:
+                mEverNoteSession.logOut();
+                launchLoginFragment();
                 return true;
-            case android.R.id.home:
+            /*case android.R.id.home:
                 onBackPressed();
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_evernote);
+        if (myFragment instanceof LoginFragment || myFragment instanceof NoteListFragment) {
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(getResources().getString(R.string.exit))
+                    .setMessage(getResources().getString(R.string.confirm_exit))
+                    .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        }else{
+            super.onBackPressed();
+        }
     }
 
     private void launchLoginFragment(){
@@ -101,8 +126,9 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         }
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container_evernote, fragment,
+                .replace(R.id.fragment_container_evernote, fragment,
                         LoginFragment.class.getCanonicalName()).commit();
+
     }
 
     private void launchNoteListFragment(){
@@ -112,32 +138,17 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         }
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container_evernote, fragment,
+                .replace(R.id.fragment_container_evernote, fragment,
                         NoteListFragment.class.getCanonicalName()).commit();
+
     }
 
 
     public void loginIntoEvernote() {
-        //if(!mEverNoteSession.isLoggedIn()) {
-            mEverNoteSession.authenticate(this);
-        /*} else {
-            testGetNotes();
-            //testAddNote();
-
-        }*/
+        mEverNoteSession.authenticate(this);
     }
 
-    @Override
-    public void onLoginFinished(boolean successful) {
-        if (successful) {
-            Toast.makeText(getApplicationContext(), "yuhuuuu", Toast.LENGTH_LONG).show();
-            testGetNotes();
-        } else {
-            // Do not change view and show a message
-            Toast.makeText(getApplicationContext(), "Could not login. Try again.", Toast.LENGTH_LONG).show();
 
-        }
-    }
 
     void testGetNotes(){
         if (!EvernoteSession.getInstance().isLoggedIn()) {
@@ -177,7 +188,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
             @Override
             public void onException(Exception exception) {
-                int i=0;
+                int i = 0;
                 i++;
 
             }
@@ -215,4 +226,17 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
     public void onLoginClick() {
         loginIntoEvernote();
     }
+
+    @Override
+    public void onLoginFinished(boolean successful) {
+        if (successful) {
+            launchNoteListFragment();
+        } else {
+            if(coordinatorLayout != null) {
+                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_succesful_login), Snackbar.LENGTH_LONG);
+            }
+        }
+    }
+
+
 }

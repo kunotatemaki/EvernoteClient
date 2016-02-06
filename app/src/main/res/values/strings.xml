@@ -4,4 +4,14 @@
     <string name="chicho_login">login icon</string>
     <string name="login_text">Tap button to log in EverNote</string>
     <string name="button_login">Login</string>
+    <string name="no_succesful_login">Could not login. Try again.</string>
+    <string name="action_order_by_name">Order by name</string>
+    <string name="action_order_by_date">Order by date</string>
+    <string name="action_log_out">Log out</string>
+    <string name="exit">Exit</string>
+    <string name="confirm_exit">Are you sure you want to exit the app?</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="note_list_fragment">Notes</string>
+    <string name="login_fragment">Login</string>
 </resources>
