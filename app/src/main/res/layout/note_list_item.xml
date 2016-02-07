@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:id="@+id/swipe_to_show_layout">
+        <TextView
+            android:id="@+id/note_list_title_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:textSize="@dimen/note_list_title_text_size"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_below="@id/note_list_title_item"
+            android:background="@color/materia_grey_400"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/margin_tiny"
+            android:textSize="@dimen/note_list_date_text_size"
+            android:id="@+id/note_list_date_item"
+            android:layout_marginBottom="@dimen/margin_small"/>
+
+    </RelativeLayout>
+    <Button
+        android:id="@+id/action_under_swipe_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_gravity="end|center_vertical"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        />
+
+    <Button
+        android:id="@+id/cancel_under_swipe_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:text="@string/cancel"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_gravity="start|center_vertical"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        />
+
+</FrameLayout>

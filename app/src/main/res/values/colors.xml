@@ -9,4 +9,45 @@
     <color name="color_refresh_2">#99CC00</color>
     <color name="color_refresh_3">#FFBB33</color>
     <color name="color_refresh_4">#FF4444</color>
+    <color name="materia_grey_400">#bdbdbd</color>
+
+    <color name="color_editing">#c0ca33</color>
+    <color name="color_deleting">#ff0000</color>
+
+    <color name="light_gray">#cfd8dc</color>
+
+
+    <!--
+
+    <color name="transparent">#00000000</color>
+    <color name="colorPrimary">#0077A0</color>
+    <color name="colorPrimaryDark">#005C84</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="textColor_Black">#000000</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#7AB800</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="primary_green">#8BC34A</color>
+    <color name="background_card">#FEFEFE</color>
+    <color name="button_accent_background">#ffffff</color>
+    <color name="color_install">#c0ca33</color>
+    <color name="color_transfer">#ffc107</color>
+    <color name="color_installing">#ef6c00</color>
+    <color name="text_installing">#e65100</color>
+    <color name="text_enabled">@color/colorAccent</color>
+    <color name="text_available">#9e9e9e</color>
+
+
+    <color name="color_refresh_1">#33B5E5</color>
+    <color name="color_refresh_2">#99CC00</color>
+    <color name="color_refresh_3">#FFBB33</color>
+    <color name="color_refresh_4">#FF4444</color>
+    <color name="color_pin">@color/colorPrimary</color>
+    <color name="color_plan">@color/colorPrimary</color>
+
+
+-->
+
 </resources>

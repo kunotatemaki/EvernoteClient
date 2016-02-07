@@ -24,17 +24,19 @@ import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
 import com.rukiasoft.androidapps.evernoteclient.BuildConfig;
 import com.rukiasoft.androidapps.evernoteclient.R;
+import com.rukiasoft.androidapps.evernoteclient.classes.NoteView;
 import com.rukiasoft.androidapps.evernoteclient.ui.LoginFragment;
 import com.rukiasoft.androidapps.evernoteclient.ui.NoteListFragment;
 import com.rukiasoft.androidapps.evernoteclient.ui.ToolbarAndRefreshActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class EverNoteActivity extends ToolbarAndRefreshActivity implements LoginFragment.OnLoginListener,
-        EvernoteLoginFragment.ResultCallback{
+        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnActionListener{
 
     private static final EvernoteSession.EvernoteService EVER_NOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
     private EvernoteSession mEverNoteSession;
@@ -150,7 +152,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
 
 
-    void testGetNotes(){
+    public void getNotesFromEvernote(){
         if (!EvernoteSession.getInstance().isLoggedIn()) {
             return;
         }
@@ -161,10 +163,10 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             @Override
             public void onSuccess(NoteList result) {
                 List<Note> notes = result.getNotes();
+                List<NoteView> notesForAdapter = new ArrayList<NoteView>();
                 for (Note note : notes) {
-                    String titulo = note.getTitle();
-                    String body = note.getContent();
-                    EvernoteNoteStoreClient prueba = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+                    notesForAdapter.add(new NoteView(NoteView.STATUS_NORMAL, note));
+                    /*EvernoteNoteStoreClient prueba = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
 
                     prueba.getNoteAsync(note.getGuid(), true, true, true, true, new EvernoteCallback<Note>() {
                         @Override
@@ -180,10 +182,21 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                             int i = 0;
                             i++;
                         }
-                    });
-
-
+                    });*/
                 }
+                NoteListFragment fragment = (NoteListFragment)getSupportFragmentManager().findFragmentByTag(
+                        NoteListFragment.class.getCanonicalName());
+                if(fragment == null){
+                    fragment = new NoteListFragment();
+                }
+                if(!fragment.isResumed()){
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container_evernote, fragment, NoteListFragment.class.getCanonicalName());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                fragment.setNotes(notesForAdapter);
+                hideRefreshLayoutSwipeProgress();
             }
 
             @Override
@@ -239,4 +252,8 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
     }
 
 
+    @Override
+    public void onActionClick(NoteView noteView) {
+
+    }
 }

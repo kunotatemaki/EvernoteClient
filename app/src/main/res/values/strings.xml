@@ -14,4 +14,6 @@
     <string name="cancel">Cancel</string>
     <string name="note_list_fragment">Notes</string>
     <string name="login_fragment">Login</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
