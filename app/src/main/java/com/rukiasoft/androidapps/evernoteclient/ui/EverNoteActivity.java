@@ -85,9 +85,9 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                 mEverNoteSession.logOut();
                 launchLoginFragment();
                 return true;
-            /*case android.R.id.home:
+            case android.R.id.home:
                 onBackPressed();
-                return true;*/
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -118,7 +118,8 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
     }
 
     private void launchLoginFragment(){
-        LoginFragment fragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag(LoginFragment.class.getCanonicalName());
+        LoginFragment fragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag(
+                LoginFragment.class.getCanonicalName());
         if(fragment == null){
             fragment = new LoginFragment();
         }
@@ -130,7 +131,8 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
     }
 
     private void launchNoteListFragment(){
-        NoteListFragment fragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(NoteListFragment.class.getCanonicalName());
+        NoteListFragment fragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(
+                NoteListFragment.class.getCanonicalName());
         if(fragment == null){
             fragment = new NoteListFragment();
         }
@@ -138,6 +140,23 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_evernote, fragment,
                         NoteListFragment.class.getCanonicalName()).commit();
+
+    }
+
+    private void launchNoteDetailsFragment(Note note){
+        NoteDetailsFragment fragment = (NoteDetailsFragment) getSupportFragmentManager().findFragmentByTag(
+                NoteDetailsFragment.class.getCanonicalName());
+        if(fragment == null){
+            fragment = NoteDetailsFragment.newInstance(note);
+        }else{
+            fragment.setNote(note);
+        }
+        // Add the fragment to the 'fragment_container' FrameLayout
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_evernote, fragment,
+                        NoteDetailsFragment.class.getCanonicalName());
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 
@@ -162,30 +181,13 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                 List<NoteView> notesForAdapter = new ArrayList<NoteView>();
                 for (Note note : notes) {
                     notesForAdapter.add(new NoteView(NoteView.STATUS_NORMAL, note));
-                    /*EvernoteNoteStoreClient prueba = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
-
-                    prueba.getNoteAsync(note.getGuid(), true, true, true, true, new EvernoteCallback<Note>() {
-                        @Override
-                        public void onSuccess(Note result) {
-                            String titulo1 = result.getTitle();
-                            String body1 = result.getContent();
-                            int i = 0;
-                            i++;
-                        }
-
-                        @Override
-                        public void onException(Exception exception) {
-                            int i = 0;
-                            i++;
-                        }
-                    });*/
                 }
-                NoteListFragment fragment = (NoteListFragment)getSupportFragmentManager().findFragmentByTag(
+                NoteListFragment fragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(
                         NoteListFragment.class.getCanonicalName());
-                if(fragment == null){
+                if (fragment == null) {
                     fragment = new NoteListFragment();
                 }
-                if(!fragment.isResumed()){
+                if (!fragment.isResumed()) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container_evernote, fragment, NoteListFragment.class.getCanonicalName());
                     transaction.addToBackStack(null);
@@ -197,9 +199,9 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
             @Override
             public void onException(Exception exception) {
-                int i = 0;
-                i++;
-
+                if (coordinatorLayout != null) {
+                    Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_notes), Snackbar.LENGTH_LONG).show();
+                }
             }
 
         });
@@ -250,12 +252,12 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
     @Override
     public void onNoteActionClick(NoteView noteView) {
-        if(noteView.getStatus() == noteView.STATUS_EDITING){
+        if(noteView.getStatus() == NoteView.STATUS_EDITING){
             // TODO: 7/2/16 llamar a función de editar
             if(coordinatorLayout != null) {
                 Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_editing), Snackbar.LENGTH_LONG).show();
             }
-        }else if(noteView.getStatus() == noteView.STATUS_DELETING){
+        }else if(noteView.getStatus() == NoteView.STATUS_DELETING){
             // TODO: 7/2/16 llamar a función de borrar
             if(coordinatorLayout != null) {
                 Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_deleting), Snackbar.LENGTH_LONG).show();
@@ -265,8 +267,24 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
     @Override
     public void onNoteClick(NoteView noteView) {
-        if(coordinatorLayout != null) {
-            Snackbar.make(coordinatorLayout, "mostrando detalles de la nota", Snackbar.LENGTH_LONG).show();
-        }
+        getNoteDetails(noteView.getNote());
+    }
+
+    private void getNoteDetails(Note note){
+        EvernoteNoteStoreClient client = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+
+        client.getNoteAsync(note.getGuid(), true, true, true, true, new EvernoteCallback<Note>() {
+            @Override
+            public void onSuccess(Note result) {
+                launchNoteDetailsFragment(result);
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                if(coordinatorLayout != null) {
+                    Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_note_details), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
