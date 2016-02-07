@@ -132,7 +132,7 @@ public class NoteListFragment extends Fragment {
     private void setDataInRecycler(){
 
         mAdapter = new NoteListAdapter(getActivity(), mNotes);
-        mAdapter.setOnActionListener((EverNoteActivity) getActivity());
+        mAdapter.setOnNoteListener((EverNoteActivity) getActivity());
         mRecyclerView.setAdapter(mAdapter);
         setUpItemTouchHelper(mAdapter);
         setUpAnimationDecoratorHelper();

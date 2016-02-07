@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,9 +24,6 @@ import com.evernote.edam.type.Note;
 import com.rukiasoft.androidapps.evernoteclient.BuildConfig;
 import com.rukiasoft.androidapps.evernoteclient.R;
 import com.rukiasoft.androidapps.evernoteclient.classes.NoteView;
-import com.rukiasoft.androidapps.evernoteclient.ui.LoginFragment;
-import com.rukiasoft.androidapps.evernoteclient.ui.NoteListFragment;
-import com.rukiasoft.androidapps.evernoteclient.ui.ToolbarAndRefreshActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class EverNoteActivity extends ToolbarAndRefreshActivity implements LoginFragment.OnLoginListener,
-        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnActionListener{
+        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnNoteListener {
 
     private static final EvernoteSession.EvernoteService EVER_NOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
     private EvernoteSession mEverNoteSession;
@@ -253,7 +249,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
 
     @Override
-    public void onActionClick(NoteView noteView) {
+    public void onNoteActionClick(NoteView noteView) {
         if(noteView.getStatus() == noteView.STATUS_EDITING){
             // TODO: 7/2/16 llamar a función de editar
             if(coordinatorLayout != null) {
@@ -264,6 +260,13 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             if(coordinatorLayout != null) {
                 Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_deleting), Snackbar.LENGTH_LONG).show();
             }
+        }
+    }
+
+    @Override
+    public void onNoteClick(NoteView noteView) {
+        if(coordinatorLayout != null) {
+            Snackbar.make(coordinatorLayout, "mostrando detalles de la nota", Snackbar.LENGTH_LONG).show();
         }
     }
 }

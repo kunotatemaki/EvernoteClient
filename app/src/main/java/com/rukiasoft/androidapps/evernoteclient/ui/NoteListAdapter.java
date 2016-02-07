@@ -38,7 +38,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     //List<NoteView> notesShowingButton;
     Context mContext;
 
-    private OnActionListener onActionListener;
+    private OnNoteListener onNoteListener;
 
     public NoteListAdapter(Context context, List<NoteView> notes) {
         adapterNotes = notes;
@@ -52,8 +52,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         return new NoteViewHolder(view);
     }
 
-    public void setOnActionListener(OnActionListener onActionListener) {
-        this.onActionListener = onActionListener;
+    public void setOnNoteListener(OnNoteListener onNoteListener) {
+        this.onNoteListener = onNoteListener;
     }
 
     @Override
@@ -64,6 +64,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         switch (item.getStatus()) {
             case NoteView.STATUS_NORMAL:
                 viewHolder.row.setBackgroundColor(Color.TRANSPARENT);
+                viewHolder.row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onNoteListener.onNoteClick(item);
+                    }
+                });
                 viewHolder.titleNote.setVisibility(View.VISIBLE);
                 viewHolder.titleNote.setText(item.getNote().getTitle());
                 viewHolder.dateNote.setVisibility(View.VISIBLE);
@@ -95,8 +101,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         viewHolder.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onActionListener != null) {
-                    onActionListener.onActionClick((NoteView) viewHolder.itemView.getTag());
+                if (onNoteListener != null) {
+                    onNoteListener.onNoteActionClick((NoteView) viewHolder.itemView.getTag());
                 }
                 item.setStatus(NoteView.STATUS_NORMAL);
                 notifyItemChanged(adapterNotes.indexOf(item));
@@ -113,6 +119,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         });
         viewHolder.titleNote.setVisibility(View.INVISIBLE);
         viewHolder.dateNote.setVisibility(View.INVISIBLE);
+        viewHolder.row.setOnClickListener(null);
     }
 
     @Override
@@ -169,8 +176,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         }
     }
 
-    public interface OnActionListener {
-        void onActionClick(NoteView noteView);
+    public interface OnNoteListener {
+        void onNoteActionClick(NoteView noteView);
+        void onNoteClick(NoteView noteView);
     }
 
 
