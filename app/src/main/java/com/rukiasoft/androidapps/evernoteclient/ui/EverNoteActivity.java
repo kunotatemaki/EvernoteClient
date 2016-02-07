@@ -36,8 +36,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
     private static final EvernoteSession.EvernoteService EVER_NOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
     private EvernoteSession mEverNoteSession;
 
-    @Bind(R.id.fragment_container_evernote)
-    FrameLayout containerEvernote;
+    private boolean forceOnBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +111,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
-        }else if(myFragment instanceof AddNoteFragment || myFragment instanceof AddDrawingFragment) {
+        }else if(!forceOnBack && (myFragment instanceof AddNoteFragment || myFragment instanceof AddDrawingFragment)) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getResources().getString(R.string.exit))
@@ -121,13 +120,15 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            forceOnBack = true;
+                            onBackPressed();
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         }else{
             super.onBackPressed();
+            forceOnBack = false;
         }
     }
 
