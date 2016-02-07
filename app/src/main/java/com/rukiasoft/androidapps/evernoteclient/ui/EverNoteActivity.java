@@ -1,21 +1,19 @@
 package com.rukiasoft.androidapps.evernoteclient.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.evernote.client.android.EvernoteSession;
-import com.evernote.client.android.EvernoteUtil;
 import com.evernote.client.android.asyncclient.EvernoteCallback;
 import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
 import com.evernote.client.android.login.EvernoteLoginFragment;
@@ -54,7 +52,6 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             @Override
             public void onClick(View view) {
                 selectAddNoteMethod();
-
             }
         });
         mEverNoteSession = new EvernoteSession.Builder(this)
@@ -115,7 +112,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
-        }else if(myFragment instanceof AddNoteFragment) {
+        }else if(myFragment instanceof AddNoteFragment || myFragment instanceof AddDrawingFragment) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getResources().getString(R.string.exit))
@@ -188,6 +185,22 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_evernote, fragment,
                         AddNoteFragment.class.getCanonicalName());
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    private void launchAddDrawingFragment(){
+        AddDrawingFragment fragment = (AddDrawingFragment) getSupportFragmentManager().findFragmentByTag(
+                AddDrawingFragment.class.getCanonicalName());
+        if(fragment == null){
+            fragment = new AddDrawingFragment();
+        }
+
+        // Add the fragment to the 'fragment_container' FrameLayout
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_evernote, fragment,
+                        AddDrawingFragment.class.getCanonicalName());
         transaction.addToBackStack(null);
         transaction.commit();
 
@@ -307,10 +320,8 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             public void onClick(DialogInterface dialog, int item) { //pick from camera
                 if (item == 0) {
                     launchAddNoteFragment();
-                } else { //pick from file
-                    if (coordinatorLayout != null) {
-                        Snackbar.make(coordinatorLayout, "write with your finger", Snackbar.LENGTH_LONG).show();
-                    }
+                } else {
+                    launchAddDrawingFragment();
                 }
             }
         });

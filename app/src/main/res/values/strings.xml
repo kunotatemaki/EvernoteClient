@@ -29,5 +29,7 @@
     <string name="title_needed">You need to provide a title for your note</string>
     <string name="error_adding_note">Error creating your note. Try again.</string>
     <string name="confirm_exit_add_note">The note changes will be lost. Are you sure?</string>
+    <string name="action_call_ocr">Convert to text</string>
+    <string name="action_delete_draw">Delete draw</string>
 
 </resources>
