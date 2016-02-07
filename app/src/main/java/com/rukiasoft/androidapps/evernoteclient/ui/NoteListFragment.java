@@ -20,6 +20,7 @@ import com.rukiasoft.androidapps.evernoteclient.recyclerviewutils.Decorator;
 import com.rukiasoft.androidapps.evernoteclient.recyclerviewutils.DividerItemDecoration;
 import com.rukiasoft.androidapps.evernoteclient.recyclerviewutils.NoteListTouchHelper;
 import com.rukiasoft.androidapps.evernoteclient.utilities.Constants;
+import com.rukiasoft.androidapps.evernoteclient.utilities.Tools;
 
 import java.util.List;
 
@@ -196,6 +197,8 @@ public class NoteListFragment extends Fragment {
             ((EverNoteActivity)getActivity()).setTitle(getResources().getString(R.string.app_name) + " " +
                     getResources().getString(R.string.note_list_fragment));
         }
+
+
         if(needToSetData){
             setDataInRecycler();
         }

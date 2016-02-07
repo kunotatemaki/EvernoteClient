@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class EverNoteActivity extends ToolbarAndRefreshActivity implements LoginFragment.OnLoginListener,
-        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnNoteListener {
+        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnNoteListener, AddNoteFragment.OnSaveNoteListener {
 
     private static final EvernoteSession.EvernoteService EVER_NOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
     private EvernoteSession mEverNoteSession;
@@ -52,7 +53,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         fabEverNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 6/2/16 función de añadir notas
+                selectAddNoteMethod();
 
             }
         });
@@ -162,6 +163,22 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
     }
 
+    private void launchAddNoteFragment(){
+        AddNoteFragment fragment = (AddNoteFragment) getSupportFragmentManager().findFragmentByTag(
+                AddNoteFragment.class.getCanonicalName());
+        if(fragment == null){
+            fragment = new AddNoteFragment();
+        }
+
+        // Add the fragment to the 'fragment_container' FrameLayout
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_evernote, fragment,
+                        AddNoteFragment.class.getCanonicalName());
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
 
     public void loginIntoEvernote() {
         mEverNoteSession.authenticate(this);
@@ -209,31 +226,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         });
     }
 
-    private void testAddNote(){
-        if (!EvernoteSession.getInstance().isLoggedIn()) {
-            return;
-        }
 
-        EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
-
-        Note note = new Note();
-        note.setTitle("nota añadida por la app");
-        note.setContent(EvernoteUtil.NOTE_PREFIX + "a ver si publicas contenido, cojones" + EvernoteUtil.NOTE_SUFFIX);
-
-        noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
-            @Override
-            public void onSuccess(Note result) {
-                Toast.makeText(getApplicationContext(), result.getTitle() + " has been created", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("LOGTAG", "Error creating note", exception);
-            }
-        });
-
-
-    }
 
     @Override
     public void onLoginClick() {
@@ -283,10 +276,66 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
             @Override
             public void onException(Exception exception) {
-                if(coordinatorLayout != null) {
+                if (coordinatorLayout != null) {
                     Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_note_details), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private void selectAddNoteMethod(){
+        final String [] items = new String [] {getResources().getString(R.string.type_with_keyboard),
+                getResources().getString(R.string.type_with_finger)};
+        ArrayAdapter<String> adapter = new ArrayAdapter<> (this, android.R.layout.select_dialog_item,items);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.type_method));
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) { //pick from camera
+                if (item == 0) {
+                    launchAddNoteFragment();
+                } else { //pick from file
+                    if (coordinatorLayout != null) {
+                        Snackbar.make(coordinatorLayout, "write with your finger", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+        final android.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void onSaveNote(Note note) {
+        if (!EvernoteSession.getInstance().isLoggedIn()) {
+            if (coordinatorLayout != null) {
+                Snackbar.make(coordinatorLayout, "not logged in", Snackbar.LENGTH_LONG).show();
+            }
+        }
+
+        EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+
+        noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
+            @Override
+            public void onSuccess(Note result) {
+                AddNoteFragment fragment = (AddNoteFragment) getSupportFragmentManager().findFragmentByTag(
+                        AddNoteFragment.class.getCanonicalName());
+                if(fragment != null && fragment.isResumed()){
+                    NoteListFragment noteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(
+                            NoteListFragment.class.getCanonicalName());
+                    if(noteListFragment != null){
+                        noteListFragment.setAvoidGettingNotes(false);
+                    }
+                    onBackPressed();
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                if (coordinatorLayout != null) {
+                    Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_adding_note), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 }

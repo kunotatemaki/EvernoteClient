@@ -20,5 +20,13 @@
     <string name="no_deleting">Deleting action not implemented yet</string>
     <string name="error_notes">Error getting notes. Try again.</string>
     <string name="error_note_details">Error getting the details of the selected note</string>
+    <string name="type_with_keyboard">Use the keyboard</string>
+    <string name="type_with_finger">Use your finger</string>
+    <string name="type_method">Choose method</string>
+    <string name="title">Title</string>
+    <string name="body">Content</string>
+    <string name="action_save">Save</string>
+    <string name="title_needed">You need to provide a title for your note</string>
+    <string name="error_adding_note">Error creating your note. Try again.</string>
 
 </resources>
