@@ -20,8 +20,13 @@ import android.widget.TextView;
 
 import com.rukiasoft.androidapps.evernoteclient.R;
 import com.rukiasoft.androidapps.evernoteclient.classes.NoteView;
+import com.rukiasoft.androidapps.evernoteclient.utilities.NoteDateComparator;
+import com.rukiasoft.androidapps.evernoteclient.utilities.NoteNameComparator;
 import com.rukiasoft.androidapps.evernoteclient.utilities.Tools;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,7 +40,6 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
 
     private List<NoteView> adapterNotes;
-    //List<NoteView> notesShowingButton;
     Context mContext;
 
     private OnNoteListener onNoteListener;
@@ -153,6 +157,20 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     public void refresh(NoteView noteView) {
         if(adapterNotes != null && !adapterNotes.isEmpty()) {
             notifyItemChanged(adapterNotes.indexOf(noteView));
+        }
+    }
+
+    public void orderByName(){
+        if(adapterNotes != null && !adapterNotes.isEmpty()) {
+            Collections.sort(adapterNotes, new NoteNameComparator());
+            notifyDataSetChanged();
+        }
+    }
+
+    public void orderByDate(){
+        if(adapterNotes != null && !adapterNotes.isEmpty()) {
+            Collections.sort(adapterNotes, new NoteDateComparator());
+            notifyDataSetChanged();
         }
     }
 
