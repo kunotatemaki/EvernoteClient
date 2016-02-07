@@ -59,7 +59,9 @@ public class AddDrawingFragment extends Fragment {
                 //callOCR();
                 return true;
             case R.id.action_delete_draw:
-                //deleteDraw();
+                if(canvas != null){
+                    canvas.clearDrawing();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -69,6 +69,9 @@ public class DrawingView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        width = w;      // don't forget these
+        height = h;
+
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
     }
@@ -134,5 +137,18 @@ public class DrawingView extends View {
                 break;
         }
         return true;
+    }
+
+    public void clearDrawing()
+    {
+
+        setDrawingCacheEnabled(false);
+        // don't forget that one and the match below,
+        // or you just keep getting a duplicate when you save.
+
+        onSizeChanged(width, height, width, height);
+        invalidate();
+
+        setDrawingCacheEnabled(true);
     }
 }
