@@ -95,11 +95,11 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         viewHolder.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item.setStatus(NoteView.STATUS_NORMAL);
-                notifyItemChanged(adapterNotes.indexOf(item));
                 if (onActionListener != null) {
                     onActionListener.onActionClick((NoteView) viewHolder.itemView.getTag());
                 }
+                item.setStatus(NoteView.STATUS_NORMAL);
+                notifyItemChanged(adapterNotes.indexOf(item));
             }
         });
 

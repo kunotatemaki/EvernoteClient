@@ -246,7 +246,7 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             launchNoteListFragment();
         } else {
             if(coordinatorLayout != null) {
-                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_succesful_login), Snackbar.LENGTH_LONG);
+                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_succesful_login), Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -254,6 +254,16 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
     @Override
     public void onActionClick(NoteView noteView) {
-
+        if(noteView.getStatus() == noteView.STATUS_EDITING){
+            // TODO: 7/2/16 llamar a función de editar
+            if(coordinatorLayout != null) {
+                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_editing), Snackbar.LENGTH_LONG).show();
+            }
+        }else if(noteView.getStatus() == noteView.STATUS_DELETING){
+            // TODO: 7/2/16 llamar a función de borrar
+            if(coordinatorLayout != null) {
+                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_deleting), Snackbar.LENGTH_LONG).show();
+            }
+        }
     }
 }

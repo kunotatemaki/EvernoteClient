@@ -16,4 +16,6 @@
     <string name="login_fragment">Login</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="no_editing">Editing action not implemented yet</string>
+    <string name="no_deleting">Deleting action not implemented yet</string>
 </resources>
