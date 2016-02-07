@@ -14,6 +14,7 @@
     <dimen name="ic_clear_margin">@dimen/margin_medium</dimen>
     <dimen name="note_list_date_text_size">10sp</dimen>
     <dimen name="note_details_title_text_size">25sp</dimen>
+    <item name="circle_size" format="float" type="dimen">4</item>
 
 
     <!--

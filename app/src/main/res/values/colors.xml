@@ -15,6 +15,8 @@
     <color name="color_deleting">#ff0000</color>
 
     <color name="light_gray">#cfd8dc</color>
+    <color name="color_drawing_path">@color/colorPrimary</color>
+    <color name="color_drawing_finger">@color/colorAccent</color>
 
 
     <!--

@@ -3,12 +3,15 @@ package com.rukiasoft.androidapps.evernoteclient.classes;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.rukiasoft.androidapps.evernoteclient.R;
 
 /**
  * Created by Raúl Feliz on 7/2/16.
@@ -22,24 +25,26 @@ public class DrawingView extends View {
     private Canvas mCanvas;
     private Path mPath;
     private Paint mBitmapPaint;
-    Context context;
+    Context mContext;
     private Paint circlePaint;
     private Path circlePath;
     private Paint mPaint;
 
-    public DrawingView(Context c) {
-        super(c);
-        context=c;
+    public DrawingView(Context context) {
+        super(context);
+        this.mContext =context;
         setParameters();
     }
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mContext =context;
         setParameters();
     }
 
     public DrawingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.mContext =context;
         setParameters();
     }
 
@@ -48,21 +53,25 @@ public class DrawingView extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setColor(Color.GREEN);
+        mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_drawing_path));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(12);
+        mPaint.setStrokeWidth(mContext.getResources().getInteger(R.integer.path_size));
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         //circulo
         circlePaint = new Paint();
         circlePath = new Path();
         circlePaint.setAntiAlias(true);
-        circlePaint.setColor(Color.BLUE);
+        circlePaint.setColor(ContextCompat.getColor(mContext, R.color.color_drawing_finger));
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeJoin(Paint.Join.MITER);
-        circlePaint.setStrokeWidth(4f);
+        TypedValue tempVal = new TypedValue();
+        getResources().getValue(R.dimen.circle_size, tempVal, true);
+        float alphaValue = tempVal.getFloat();
+
+        circlePaint.setStrokeWidth(alphaValue);
     }
 
     @Override
