@@ -115,6 +115,20 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
+        }else if(myFragment instanceof AddNoteFragment) {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(getResources().getString(R.string.exit))
+                    .setMessage(getResources().getString(R.string.confirm_exit_add_note))
+                    .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         }else{
             super.onBackPressed();
         }
