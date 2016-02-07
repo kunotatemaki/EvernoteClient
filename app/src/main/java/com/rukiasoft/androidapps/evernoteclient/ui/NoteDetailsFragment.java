@@ -96,5 +96,13 @@ public class NoteDetailsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

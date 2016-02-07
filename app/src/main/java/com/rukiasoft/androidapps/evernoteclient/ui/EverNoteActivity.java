@@ -64,10 +64,12 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
 
 
         //check which fragment I should launch
-        if(!mEverNoteSession.isLoggedIn()){
-            launchLoginFragment();
-        }else{
-            launchNoteListFragment();
+        if(savedInstanceState == null) {
+            if (!mEverNoteSession.isLoggedIn()) {
+                launchLoginFragment();
+            } else {
+                launchNoteListFragment();
+            }
         }
     }
 
