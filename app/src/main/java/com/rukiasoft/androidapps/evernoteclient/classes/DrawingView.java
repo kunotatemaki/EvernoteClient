@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.media.ThumbnailUtils;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -72,6 +73,8 @@ public class DrawingView extends View {
         float alphaValue = tempVal.getFloat();
 
         circlePaint.setStrokeWidth(alphaValue);
+
+        setDrawingCacheEnabled(true);
     }
 
     @Override
@@ -159,5 +162,17 @@ public class DrawingView extends View {
         invalidate();
 
         setDrawingCacheEnabled(true);
+    }
+
+    public Bitmap getBitmapFromDrawing() {
+        Bitmap whatTheUserDrewBitmap = getDrawingCache();
+        // don't forget to clear it (see above) or you just get duplicates
+
+        // almost always you will want to reduce res from the very high screen res
+        whatTheUserDrewBitmap =
+               ThumbnailUtils.extractThumbnail(whatTheUserDrewBitmap, width/4, height/4);
+        setDrawingCacheEnabled(false);
+        setDrawingCacheEnabled(true);
+        return whatTheUserDrewBitmap;
     }
 }

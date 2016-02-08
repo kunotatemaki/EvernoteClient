@@ -7,13 +7,12 @@
     <com.rukiasoft.androidapps.evernoteclient.classes.DrawingView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="3"
         android:id="@+id/add_drawing_canvas"/>
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/add_drawing_ocr"
-        android:background="@color/light_gray"/>
+        android:layout_weight="3"
+        android:id="@+id/add_drawing_ocr"/>
 </LinearLayout>

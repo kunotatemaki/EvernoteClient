@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteUtil;
@@ -27,7 +28,7 @@ public class AddDrawingFragment extends Fragment {
     @Bind(R.id.add_drawing_canvas)
     DrawingView canvas;
     @Bind(R.id.add_drawing_ocr)
-    TextView ocr;
+    ImageView ocr;
 
     private OnSaveNoteListener mCallback;
 
@@ -56,6 +57,11 @@ public class AddDrawingFragment extends Fragment {
 
         switch(id){
             case R.id.action_call_ocr:
+                if(canvas != null){
+                    ocr.setImageBitmap(null);
+                    ocr.setImageBitmap(canvas.getBitmapFromDrawing());
+                    //canvas.clearDrawing();
+                }
                 //callOCR();
                 return true;
             case R.id.action_delete_draw:
