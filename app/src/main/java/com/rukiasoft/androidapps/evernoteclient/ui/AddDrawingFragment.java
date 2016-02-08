@@ -1,22 +1,25 @@
 package com.rukiasoft.androidapps.evernoteclient.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.edam.type.Note;
 import com.rukiasoft.androidapps.evernoteclient.R;
 import com.rukiasoft.androidapps.evernoteclient.classes.DrawingView;
+import com.rukiasoft.androidapps.evernoteclient.classes.OCRClass;
+import com.rukiasoft.androidapps.evernoteclient.classes.OnSaveNoteListener;
+import com.rukiasoft.androidapps.evernoteclient.utilities.Tools;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,8 +30,6 @@ public class AddDrawingFragment extends Fragment {
 
     @Bind(R.id.add_drawing_canvas)
     DrawingView canvas;
-    @Bind(R.id.add_drawing_ocr)
-    ImageView ocr;
 
     private OnSaveNoteListener mCallback;
 
@@ -58,9 +59,9 @@ public class AddDrawingFragment extends Fragment {
         switch(id){
             case R.id.action_call_ocr:
                 if(canvas != null){
-                    ocr.setImageBitmap(null);
-                    ocr.setImageBitmap(canvas.getBitmapFromDrawing());
-                    //canvas.clearDrawing();
+                    OCRClass ocrClass = new OCRClass(getActivity());
+                    String recognizedText = ocrClass.getOCRFromBitmap(canvas.getBitmapFromDrawing());
+                    showDialogWithRecognizedText(recognizedText);
                 }
                 //callOCR();
                 return true;
@@ -72,6 +73,27 @@ public class AddDrawingFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showDialogWithRecognizedText(final String recognizedText) {
+        String sBody = getResources().getString(R.string.recognized);
+        Tools tools = new Tools();
+        String strColor = tools.getStringColorFromIntColor(getActivity(), R.color.colorAccent);
+        sBody = sBody.replace("_RECOGNIZED_", "<b><font color=\"" + strColor + "\">" + recognizedText + "</font></b>");
+
+        new AlertDialog.Builder(getActivity())
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle(getResources().getString(R.string.OCR_title))
+                .setMessage(Html.fromHtml(sBody))
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveNote(recognizedText);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
@@ -124,24 +146,13 @@ public class AddDrawingFragment extends Fragment {
         }
     }
 
-    private void saveNote(){
-        /*if(titleAdd.getText().toString().isEmpty()){
-            titleWraper.setError(getResources().getString(R.string.title_needed));
-            return;
-        }else{
-            titleWraper.setError(null);
-        }
+    private void saveNote(String recognizedText){
         Note note = new Note();
-        note.setTitle(titleAdd.getText().toString().trim());
+        note.setTitle(recognizedText.trim());
         String body = "";
-        if(bodyAdd.getText() != null && !bodyAdd.getText().toString().isEmpty()){
-            //note.setTitle("nota añadida por la app");
 
-            body = bodyAdd.getText().toString();
-        }
         note.setContent(EvernoteUtil.NOTE_PREFIX + body + EvernoteUtil.NOTE_SUFFIX);
-
-        mCallback.onSaveNote(note);*/
+        mCallback.onSaveNote(note);
 
     }
 
@@ -155,8 +166,5 @@ public class AddDrawingFragment extends Fragment {
         super.onDestroy();
     }
 
-    public interface OnSaveNoteListener {
-        void onSaveNote(Note note);
-    }
 
 }

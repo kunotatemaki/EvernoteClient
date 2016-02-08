@@ -2,10 +2,10 @@ package com.rukiasoft.androidapps.evernoteclient.utilities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.inputmethod.InputMethodManager;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by Raúl Feliz on 7/2/16.
@@ -28,4 +28,8 @@ public class Tools {
         }
     }
 
+    public String getStringColorFromIntColor(Context context, int color){
+        int colorPin = ContextCompat.getColor(context, color);
+        return String.format("#%06X", 0xFFFFFF & colorPin);
+    }
 }

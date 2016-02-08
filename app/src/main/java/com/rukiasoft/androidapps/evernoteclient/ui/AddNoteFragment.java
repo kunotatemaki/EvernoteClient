@@ -1,10 +1,11 @@
 package com.rukiasoft.androidapps.evernoteclient.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Html;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.edam.type.Note;
 import com.rukiasoft.androidapps.evernoteclient.R;
-import com.rukiasoft.androidapps.evernoteclient.classes.NoteView;
+import com.rukiasoft.androidapps.evernoteclient.classes.OnSaveNoteListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,11 +60,28 @@ public class AddNoteFragment extends Fragment {
 
         switch(id){
             case R.id.action_save:
-                saveNote();
+                showDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showDialog() {
+
+        new AlertDialog.Builder(getActivity())
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle(getResources().getString(R.string.save_note))
+                .setMessage(getResources().getString(R.string.save_note_body))
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveNote();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
@@ -147,8 +165,6 @@ public class AddNoteFragment extends Fragment {
         super.onDestroy();
     }
 
-    public interface OnSaveNoteListener {
-        void onSaveNote(Note note);
-    }
+
 
 }

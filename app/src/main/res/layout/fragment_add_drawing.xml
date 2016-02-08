@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="6">
+    android:layout_height="match_parent">
 
     <com.rukiasoft.androidapps.evernoteclient.classes.DrawingView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_height="match_parent"
         android:id="@+id/add_drawing_canvas"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:id="@+id/add_drawing_ocr"/>
-</LinearLayout>
+</FrameLayout>

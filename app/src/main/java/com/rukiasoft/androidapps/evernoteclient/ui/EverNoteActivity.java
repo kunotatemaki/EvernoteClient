@@ -1,7 +1,6 @@
 package com.rukiasoft.androidapps.evernoteclient.ui;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.asyncclient.EvernoteCallback;
@@ -23,15 +21,15 @@ import com.evernote.edam.type.Note;
 import com.rukiasoft.androidapps.evernoteclient.BuildConfig;
 import com.rukiasoft.androidapps.evernoteclient.R;
 import com.rukiasoft.androidapps.evernoteclient.classes.NoteView;
+import com.rukiasoft.androidapps.evernoteclient.classes.OnSaveNoteListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class EverNoteActivity extends ToolbarAndRefreshActivity implements LoginFragment.OnLoginListener,
-        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnNoteListener, AddNoteFragment.OnSaveNoteListener {
+        EvernoteLoginFragment.ResultCallback, NoteListAdapter.OnNoteListener, OnSaveNoteListener {
 
     private static final EvernoteSession.EvernoteService EVER_NOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
     private EvernoteSession mEverNoteSession;
@@ -343,14 +341,15 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
         noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
             @Override
             public void onSuccess(Note result) {
-                AddNoteFragment fragment = (AddNoteFragment) getSupportFragmentManager().findFragmentByTag(
-                        AddNoteFragment.class.getCanonicalName());
-                if(fragment != null && fragment.isResumed()){
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_evernote);
+                if(fragment != null && fragment.isResumed() &&
+                        (fragment instanceof AddDrawingFragment || fragment instanceof AddNoteFragment)){
                     NoteListFragment noteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(
                             NoteListFragment.class.getCanonicalName());
                     if(noteListFragment != null){
                         noteListFragment.setAvoidGettingNotes(false);
                     }
+                    forceOnBack = true;
                     onBackPressed();
                 }
             }

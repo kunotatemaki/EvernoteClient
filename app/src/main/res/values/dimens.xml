@@ -16,23 +16,4 @@
     <dimen name="note_details_title_text_size">25sp</dimen>
     <item name="circle_size" format="float" type="dimen">4</item>
 
-
-    <!--
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="eid_size">25sp</dimen>
-    <dimen name="msisdn_text_size">25sp</dimen>
-    <dimen name="swipe_button_text_size">20sp</dimen>
-    <dimen name="hidden_button_width">120dp</dimen>
-    <dimen name="ic_clear_margin">16dp</dimen>
-    <dimen name="profile_heigth">72dp</dimen>
-    <dimen name="progress_bar_size">36dp</dimen>
-    <dimen name="scanner_size">250dp</dimen>
-    <dimen name="qr_instructions_text_size">20sp</dimen>
-    <dimen name="new_line_image_size">100dp</dimen>
-    <dimen name="new_line_flag_size">50dp</dimen>
-    <item name="button_disabled_alpha" format="float" type="dimen">0.3</item>
-
-    -->
 </resources>

@@ -31,5 +31,9 @@
     <string name="confirm_exit_add_note">The note changes will be lost. Are you sure?</string>
     <string name="action_call_ocr">Convert to text</string>
     <string name="action_delete_draw">Delete draw</string>
+    <string name="OCR_title">Recognized text</string>
+    <string name="recognized">Create a note with the recognized text _RECOGNIZED_?</string>
+    <string name="save_note">Save note</string>
+    <string name="save_note_body">Save the written note?</string>
 
 </resources>
