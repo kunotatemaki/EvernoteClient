@@ -280,9 +280,26 @@ public class EverNoteActivity extends ToolbarAndRefreshActivity implements Login
             }
         }else if(noteView.getStatus() == NoteView.STATUS_DELETING){
             // TODO: 7/2/16 llamar a función de borrar
-            if(coordinatorLayout != null) {
-                Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_deleting), Snackbar.LENGTH_LONG).show();
-            }
+            EvernoteNoteStoreClient client = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+
+            client.deleteNoteAsync(noteView.getNote().getGuid(), new EvernoteCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    if(coordinatorLayout != null) {
+                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.deleted), Snackbar.LENGTH_LONG).show();
+                    }
+                    showRefreshLayoutSwipeProgress();
+                    getNotesFromEvernote();
+                }
+
+                @Override
+                public void onException(Exception exception) {
+                    if(coordinatorLayout != null) {
+                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.no_deleted), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            });
+
         }
     }
 

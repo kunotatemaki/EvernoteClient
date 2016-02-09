@@ -17,7 +17,8 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="no_editing">Editing action not implemented yet</string>
-    <string name="no_deleting">Deleting action not implemented yet</string>
+    <string name="no_deleted">Error deleting note</string>
+    <string name="deleted">Deleting note successful</string>
     <string name="error_notes">Error getting notes. Try again.</string>
     <string name="error_note_details">Error getting the details of the selected note</string>
     <string name="type_with_keyboard">Use the keyboard</string>
